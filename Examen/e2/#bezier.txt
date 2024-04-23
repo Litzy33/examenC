@@ -1,0 +1,36 @@
+#bezier
+
+import math
+
+type
+  Point2D = object
+    x, y: float
+
+# Evalúa la curva de Bézier en el parámetro t
+proc evaluateBezier(controlPoints: seq[Point2D], t: float): Point2D =
+  var points: seq[Point2D] = controlPoints
+  var n = points.len - 1
+
+  for r in 1 .. n:
+    for i in 0 .. n - r:
+      points[i].x = (1.0 - t) * points[i].x + t * points[i + 1].x
+      points[i].y = (1.0 - t) * points[i].y + t * points[i + 1].y
+
+  return points[0]
+
+# Puntos de control para una curva de Bézier cúbica
+var controlPoints: seq[Point2D] = @[
+  Point2D(x: 100.0, y: 200.0),
+  Point2D(x: 200.0, y: 50.0),
+  Point2D(x: 300.0, y: 350.0),
+  Point2D(x: 400.0, y: 200.0)
+]
+
+# Número de puntos para dibujar la curva de Bézier
+let numPoints = 100
+
+# Imprimir los puntos de la curva de Bézier
+for i in 0 .. numPoints:
+  let t = float(i) / float(numPoints)
+  let point = evaluateBezier(controlPoints, t)
+  echo "Punto en t=", t, ": (", point.x, ", ", point.y, ")"
